@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hs.wa.dao.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.hs.wa.entity.Article">
+    <id column="bid" jdbcType="INTEGER" property="bid" />
+    <id column="auther" jdbcType="VARCHAR" property="auther" />
+    <id column="love" jdbcType="VARCHAR" property="love" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="operate" jdbcType="VARCHAR" property="operate" />
+    <result column="created_date" jdbcType="VARCHAR" property="createdDate" />
+    <result column="forwarded" jdbcType="VARCHAR" property="forwarded" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="update_date" jdbcType="VARCHAR" property="updateDate" />
+    <result column="watched" jdbcType="VARCHAR" property="watched" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hs.wa.entity.ArticleWithBLOBs">
+    <result column="blog" jdbcType="LONGVARCHAR" property="blog" />
+    <result column="outputHTML" jdbcType="LONGVARCHAR" property="outputhtml" />
+    <result column="images" jdbcType="LONGVARCHAR" property="images" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <if test="fields == null">
+      bid, auther, love, title, body, operate, created_date, forwarded, name, uid, update_date, 
+      watched, token
+    </if>
+    <if test="fields != null">
+      ${fields}
+    </if>
+  </sql>
+  <sql id="Blob_Column_List">
+    blog, outputHTML, images
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.hs.wa.entity.ArticleCondition" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.hs.wa.entity.ArticleCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="startRow != null">
+      limit #{startRow} , #{pageSize}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.hs.wa.entity.ArticleKey" resultMap="ResultMapWithBLOBs">
+    select 
+    bid,auther,love,title,body,operate,created_date,forwarded,name,uid,update_date,watched,token,blog,outputHTML,images
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where bid = #{bid,jdbcType=INTEGER}
+      and auther = #{auther,jdbcType=VARCHAR}
+      and love = #{love,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.hs.wa.entity.ArticleKey">
+    delete from article
+    where bid = #{bid,jdbcType=INTEGER}
+      and auther = #{auther,jdbcType=VARCHAR}
+      and love = #{love,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hs.wa.entity.ArticleCondition">
+    delete from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hs.wa.entity.ArticleWithBLOBs">
+    insert into article (bid, auther, love, 
+      title, body, operate, 
+      created_date, forwarded, name, 
+      uid, update_date, watched, 
+      token, blog, outputHTML, 
+      images)
+    values (#{bid,jdbcType=INTEGER}, #{auther,jdbcType=VARCHAR}, #{love,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR}, #{operate,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=VARCHAR}, #{forwarded,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{uid,jdbcType=VARCHAR}, #{updateDate,jdbcType=VARCHAR}, #{watched,jdbcType=VARCHAR}, 
+      #{token,jdbcType=VARCHAR}, #{blog,jdbcType=LONGVARCHAR}, #{outputhtml,jdbcType=LONGVARCHAR}, 
+      #{images,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hs.wa.entity.ArticleWithBLOBs">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bid != null">
+        bid,
+      </if>
+      <if test="auther != null">
+        auther,
+      </if>
+      <if test="love != null">
+        love,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="operate != null">
+        operate,
+      </if>
+      <if test="createdDate != null">
+        created_date,
+      </if>
+      <if test="forwarded != null">
+        forwarded,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="watched != null">
+        watched,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="blog != null">
+        blog,
+      </if>
+      <if test="outputhtml != null">
+        outputHTML,
+      </if>
+      <if test="images != null">
+        images,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bid != null">
+        #{bid,jdbcType=INTEGER},
+      </if>
+      <if test="auther != null">
+        #{auther,jdbcType=VARCHAR},
+      </if>
+      <if test="love != null">
+        #{love,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="operate != null">
+        #{operate,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null">
+        #{createdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="forwarded != null">
+        #{forwarded,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="watched != null">
+        #{watched,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="blog != null">
+        #{blog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="outputhtml != null">
+        #{outputhtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="images != null">
+        #{images,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hs.wa.entity.ArticleCondition" resultType="java.lang.Long">
+    select count(*) from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article
+    <set>
+      <if test="record.bid != null">
+        bid = #{record.bid,jdbcType=INTEGER},
+      </if>
+      <if test="record.auther != null">
+        auther = #{record.auther,jdbcType=VARCHAR},
+      </if>
+      <if test="record.love != null">
+        love = #{record.love,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.body != null">
+        body = #{record.body,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operate != null">
+        operate = #{record.operate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdDate != null">
+        created_date = #{record.createdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.forwarded != null">
+        forwarded = #{record.forwarded,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null">
+        update_date = #{record.updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.watched != null">
+        watched = #{record.watched,jdbcType=VARCHAR},
+      </if>
+      <if test="record.token != null">
+        token = #{record.token,jdbcType=VARCHAR},
+      </if>
+      <if test="record.blog != null">
+        blog = #{record.blog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.outputhtml != null">
+        outputHTML = #{record.outputhtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.images != null">
+        images = #{record.images,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update article
+    set bid = #{record.bid,jdbcType=INTEGER},
+      auther = #{record.auther,jdbcType=VARCHAR},
+      love = #{record.love,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      body = #{record.body,jdbcType=VARCHAR},
+      operate = #{record.operate,jdbcType=VARCHAR},
+      created_date = #{record.createdDate,jdbcType=VARCHAR},
+      forwarded = #{record.forwarded,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      uid = #{record.uid,jdbcType=VARCHAR},
+      update_date = #{record.updateDate,jdbcType=VARCHAR},
+      watched = #{record.watched,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR},
+      blog = #{record.blog,jdbcType=LONGVARCHAR},
+      outputHTML = #{record.outputhtml,jdbcType=LONGVARCHAR},
+      images = #{record.images,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article
+    set bid = #{record.bid,jdbcType=INTEGER},
+      auther = #{record.auther,jdbcType=VARCHAR},
+      love = #{record.love,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      body = #{record.body,jdbcType=VARCHAR},
+      operate = #{record.operate,jdbcType=VARCHAR},
+      created_date = #{record.createdDate,jdbcType=VARCHAR},
+      forwarded = #{record.forwarded,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      uid = #{record.uid,jdbcType=VARCHAR},
+      update_date = #{record.updateDate,jdbcType=VARCHAR},
+      watched = #{record.watched,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hs.wa.entity.ArticleWithBLOBs">
+    update article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="operate != null">
+        operate = #{operate,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null">
+        created_date = #{createdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="forwarded != null">
+        forwarded = #{forwarded,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="watched != null">
+        watched = #{watched,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="blog != null">
+        blog = #{blog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="outputhtml != null">
+        outputHTML = #{outputhtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="images != null">
+        images = #{images,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where bid = #{bid,jdbcType=INTEGER}
+      and auther = #{auther,jdbcType=VARCHAR}
+      and love = #{love,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hs.wa.entity.ArticleWithBLOBs">
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      operate = #{operate,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=VARCHAR},
+      forwarded = #{forwarded,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=VARCHAR},
+      watched = #{watched,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      blog = #{blog,jdbcType=LONGVARCHAR},
+      outputHTML = #{outputhtml,jdbcType=LONGVARCHAR},
+      images = #{images,jdbcType=LONGVARCHAR}
+    where bid = #{bid,jdbcType=INTEGER}
+      and auther = #{auther,jdbcType=VARCHAR}
+      and love = #{love,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hs.wa.entity.Article">
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      operate = #{operate,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=VARCHAR},
+      forwarded = #{forwarded,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=VARCHAR},
+      watched = #{watched,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR}
+    where bid = #{bid,jdbcType=INTEGER}
+      and auther = #{auther,jdbcType=VARCHAR}
+      and love = #{love,jdbcType=VARCHAR}
+  </update>
+</mapper>
